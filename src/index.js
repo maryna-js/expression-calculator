@@ -22,7 +22,7 @@ function expressionCalculator(expr) {
         }
         if (current != "") {
             result.push(current);}
-       // if (counter != 0 && counter & 1 == 1 ) {throw 'ExpressionError: Brackets must be paired';}
+        if (counter != 0 && counter & 1 == 1 ) {throw 'ExpressionError: Brackets must be paired';}
         
         return result;
     };
