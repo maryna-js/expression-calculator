@@ -5,24 +5,39 @@ function eval() {
 
 function expressionCalculator(expr) {
     expr = expr.replace(/ /g,'');
+    const checkBrackets = () => {
+        let counter = 0;
+
+        for (var k=0; k < expr.length; ++k) {
+            if (expr[k] === '(' ) {counter++;}
+            if ((expr[k] === ')' )) {
+                counter--;
+                //if (counter<0 ) {throw new Error("ExpressionError: Brackets must be paired")}
+            }
+        }
+        return counter === 0;
+    
+    };
+    if (!checkBrackets()) {throw new Error("ExpressionError: Brackets must be paired");}
     //split for parentheses
     const split = (expr, operator) => {
+
         const result = [];
-        let counter = 0;
+        let brackets = 0;
         let current = "";
         
         for (let i=0; i<expr.length; ++i) {
             const brack = expr[i];
-            if (brack == '(' ) {counter++;}
-            else if (brack == ')') {counter--;}
-            if (counter == 0 && operator == brack) {
+            if (brack == '(' ) {brackets++;}
+            else if (brack == ')') {brackets--;}
+            
+            if (brackets == 0 && operator == brack) {
                 result.push(current);
                 current = "";} 
             else current += brack;
         }
         if (current != "") {
             result.push(current);}
-        if (counter != 0 && counter & 1 == 1 ) {throw 'ExpressionError: Brackets must be paired';}
         
         return result;
     };
@@ -30,7 +45,7 @@ function expressionCalculator(expr) {
         const parseByDivision = (expr) => {
             const numberString = split(expr, '/');
             const numbers = numberString.map(noStr => {
-                if (noStr[0] == '(') {
+                if (noStr[0] == '(' && noStr[noStr.length-1] == ')') {
                     const exprs = noStr.substr(1, noStr.length - 2);
                     // recursive call to the main function
                     return parseByPlus(exprs);
@@ -50,7 +65,7 @@ function expressionCalculator(expr) {
     const parseByMultiple = (expr) => {
         const numberString = split(expr, '*');
         const numbers = numberString.map(noStr => {
-            if (noStr[0] == '(') {
+            if (noStr[0] == '(' && noStr[noStr.length-1] == ')') {
                 const exprs = noStr.substr(1, noStr.length - 2);
                 // recursive call to the main function
                 return parseByPlus(exprs);
